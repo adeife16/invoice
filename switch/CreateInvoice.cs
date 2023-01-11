@@ -151,10 +151,10 @@ namespace @switch
             e.Graphics.DrawImage(image, 230, 100, 400, 150);
             e.Graphics.DrawImage(watermark, 60, 400, 800, 500);
             e.Graphics.DrawString("2, OSHITELU STREET, COMPUTER VILLAGE, IKEJA LAGOS.", new Font("Microsoft Sans Serif", 14, FontStyle.Bold), Brushes.Black, new Point(150, 250));
-            e.Graphics.DrawImage(phoneIcon, 150, 280, 20, 20);
-            e.Graphics.DrawString("+2347053112479, +23408063127611", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(170, 280));
-            e.Graphics.DrawImage(instaIcon, 490, 280, 20, 20);
-            e.Graphics.DrawString("Switch_Phones_Gadgets", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(510, 280));
+            e.Graphics.DrawImage(phoneIcon, 200, 280, 20, 20);
+            e.Graphics.DrawString("+2347053112479, +23408063127611, +23407044842350", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(220, 280));
+            e.Graphics.DrawImage(instaIcon, 330, 300, 20, 20);
+            e.Graphics.DrawString("Switch_Phones_Gadgets", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(350, 300));
             e.Graphics.DrawString("Date: " + sDate, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 350));
             e.Graphics.DrawString("Invoice No: " + invoice_id.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(500, 350));
             e.Graphics.DrawString("Customer Name: " + customerInput.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 450));
