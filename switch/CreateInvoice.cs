@@ -115,6 +115,11 @@ namespace @switch
             dr = com.ExecuteReader();
             if(dr.Read())
             {
+                PaperSize paperSize = new PaperSize("xprinter", 314, 1170);
+                printInvoice.DefaultPageSettings.PaperSize = paperSize;
+                paperSize.RawKind = (int)PaperKind.Custom;
+                Margins margins = new Margins(25, 25, 25, 25);
+                printInvoice.DefaultPageSettings.Margins = margins;
                 printInvoice.Print();
             }
             else

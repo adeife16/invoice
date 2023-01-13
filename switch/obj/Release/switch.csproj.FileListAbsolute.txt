@@ -37,3 +37,4 @@ C:\Users\Scarlet\Desktop\switch\switch\obj\Release\@switch.exe
 C:\Users\Scarlet\Desktop\switch\switch\obj\Release\@switch.pdb
 C:\Users\Scarlet\Desktop\switch\switch\bin\Release\itextsharp.dll
 C:\Users\Scarlet\Desktop\switch\switch\obj\Release\@switch.exe.config
+C:\Users\Scarlet\Desktop\switch\switch\obj\Release\switch.csproj.AssemblyReference.cache
