@@ -164,11 +164,12 @@ namespace @switch
 
 
             e.Graphics.DrawImage(image, 60, 50, 200, 150);
+            e.Graphics.DrawString("PHONES|LAPTOPS|GADGETS|ACCESSORIES", new Font("Gabriola", 9, FontStyle.Regular), Brushes.Black, new Point(60, 205));
             e.Graphics.DrawImage(watermark, 40, 200, 200, 500);
-            e.Graphics.DrawString("2, OSHITELU STREET, COMPUTER VILLAGE,.", new Font("Microsoft Sans Serif", 8, FontStyle.Bold), Brushes.Black, new Point(20, 220));
+            e.Graphics.DrawString("2, OSHITELU STREET, COMPUTER VILLAGE,", new Font("Microsoft Sans Serif", 8, FontStyle.Bold), Brushes.Black, new Point(20, 220));
             e.Graphics.DrawString("IKEJA LAGOS.", new Font("Microsoft Sans Serif", 8, FontStyle.Bold), Brushes.Black, new Point(120, 230));
             e.Graphics.DrawImage(phoneIcon, 20, 250, 20, 20);
-            e.Graphics.DrawString("07053112479,08063127611,07044842350", new Font("Microsoft Sans Serif", 8, FontStyle.Bold), Brushes.Black, new Point(40, 250));
+            e.Graphics.DrawString("07053112479,07044842350,08063127611", new Font("Microsoft Sans Serif", 8, FontStyle.Bold), Brushes.Black, new Point(40, 250));
             e.Graphics.DrawImage(instaIcon, 80, 270, 20, 20);
             e.Graphics.DrawString("Switch_Phones_Gadgets", new Font("Microsoft Sans Serif", 8, FontStyle.Bold), Brushes.Black, new Point(100, 270));
             e.Graphics.DrawString("Date: " + sDate, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 320));
@@ -187,8 +188,8 @@ namespace @switch
             e.Graphics.DrawString("Payment Mode: " + payment.Text, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 560));
             e.Graphics.DrawString("----------------------------", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 610));
             e.Graphics.DrawString("Customer Signature", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 620));
-            e.Graphics.DrawString("----------------------------", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(200, 610));
-            e.Graphics.DrawString("CEO Sign and Stamp", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(200, 620));
+            e.Graphics.DrawString("----------------------------", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(170, 610));
+            e.Graphics.DrawString("CEO Sign and Stamp", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(170, 620));
 
         }
 
