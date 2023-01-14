@@ -200,37 +200,34 @@ namespace @switch
             int ID = Int32.Parse(com.ExecuteScalar().ToString());
             
             string current = "";
-  //          if(current != invoice_id.Text)
- //           {
-                ID++;
-                if(ID > 99999)
-                {
-                    current = "SW-" + ID.ToString();
-                }
-                else if(ID > 9999)
-                {
-                    current = "SW-0" + ID.ToString();
+            ID++;
+            if(ID > 99999)
+            {
+                current = "SW-" + ID.ToString();
+            }
+            else if(ID > 9999)
+            {
+                current = "SW-0" + ID.ToString();
 
-                }
-                else if(ID > 999)
-                {
-                    current = "SW-00" + ID.ToString();
-                }
-                else if(ID > 99)
-                {
-                    current = "SW-000" + ID.ToString();
+            }
+            else if(ID > 999)
+            {
+                current = "SW-00" + ID.ToString();
+            }
+            else if(ID > 99)
+            {
+                current = "SW-000" + ID.ToString();
 
-                }
-                else if(ID > 9)
-                {
-                    current = "SW-0000" + ID.ToString();
-                }
-                invoice_id.Text = current;
-   //         }
-    //        else
-    //        {
-     //           MessageBox.Show(invoice_id.Text);
-    //        }
+            }
+            else if(ID > 9)
+            {
+                current = "SW-0000" + ID.ToString();
+            }
+            else
+            {
+                current = "SW-0000" + ID.ToString();
+            }
+            invoice_id.Text = current;
             con.Close();
         }
         private void create_pdf()
