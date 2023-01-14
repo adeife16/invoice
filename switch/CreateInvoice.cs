@@ -16,6 +16,7 @@ using Font = System.Drawing.Font;
 using Image = System.Drawing.Image;
 using System.Drawing.Printing;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace @switch
 {
@@ -46,11 +47,14 @@ namespace @switch
 
             try
             {
+                DateTime now = DateTime.Now;
+                string StrNow = now.ToString("yyyy-MM-dd HH:mm:ss");
                 string sDate = dt.ToShortDateString();
                 con.Open();
-                com = new MySqlCommand("INSERT INTO sales(`invoice_id`,`product`,`customer`,`address`,`phone`,`imei`,`color`,`amount`,`words`,`payment`,`date`) VALUES(@id,@product,@customer,@address,@phone,@imei,@color,@amount,@word,@payment,@date)", con);
+                com = new MySqlCommand("INSERT INTO sales(`invoice_id`,`product_id`,`product`,`customer`,`address`,`phone`,`imei`,`color`,`amount`,`words`,`payment`,`date`) VALUES(@id,@product_id,@product,@customer,@address,@phone,@imei,@color,@amount,@word,@payment,@date)", con);
 
                 com.Parameters.AddWithValue("@id", invoice_id.Text);
+                com.Parameters.AddWithValue("@product_id", MD5Hash(StrNow));
                 com.Parameters.AddWithValue("@product", product.Text);
                 com.Parameters.AddWithValue("@customer", customerInput.Text);
                 com.Parameters.AddWithValue("@address", address.Text);
@@ -70,8 +74,8 @@ namespace @switch
             }
             catch(Exception e)
             {
-                MessageBox.Show(e.ToString());
-                MessageBox.Show("Clear form before creating new invoicce");
+                //MessageBox.Show(e.ToString());
+                MessageBox.Show("Clear form before creating new invoice");
             }
             con.Close();
         }
@@ -110,17 +114,14 @@ namespace @switch
         private void printInput_Click(object sender, EventArgs e)
         {
             con.Open();
-            com = new MySqlCommand("SELECT * FROM sales WHERE product_id=@product", con);
-            com.Parameters.AddWithValue("@product", productId.Text);
+            com = new MySqlCommand("SELECT * FROM sales WHERE invoice_id=@product", con);
+            com.Parameters.AddWithValue("@product", invoice_id.Text);
             dr = com.ExecuteReader();
             if(dr.Read())
             {
-                PaperSize paperSize = new PaperSize("xprinter", 314, 1170);
-                printInvoice.DefaultPageSettings.PaperSize = paperSize;
-                paperSize.RawKind = (int)PaperKind.Custom;
-                Margins margins = new Margins(25, 25, 25, 25);
-                printInvoice.DefaultPageSettings.Margins = margins;
+                printInvoice.BeginPrint += new PrintEventHandler(customize);
                 printInvoice.Print();
+
             }
             else
             {
@@ -130,8 +131,17 @@ namespace @switch
             con.Close();
         }
 
+        private void customize(object sender, EventArgs e)
+        {
+            PaperSize paperSize = new PaperSize("xprinter", 314, 800);
+            printInvoice.DefaultPageSettings.PaperSize = paperSize;
+            paperSize.RawKind = (int)PaperKind.Custom;
+            Margins margins = new Margins(25, 25, 25, 25);
+            printInvoice.DefaultPageSettings.Margins = margins;
+        }
         private void preview_Click(object sender, EventArgs e)
         {
+            printInvoice.BeginPrint += new PrintEventHandler(customize);
             printInvoicePreview.Document = printInvoice;
             printInvoicePreview.ShowDialog();
         }
@@ -153,29 +163,32 @@ namespace @switch
             Image watermark = water;
 
 
-            e.Graphics.DrawImage(image, 230, 100, 400, 150);
-            e.Graphics.DrawImage(watermark, 60, 400, 800, 500);
-            e.Graphics.DrawString("2, OSHITELU STREET, COMPUTER VILLAGE, IKEJA LAGOS.", new Font("Microsoft Sans Serif", 14, FontStyle.Bold), Brushes.Black, new Point(150, 250));
-            e.Graphics.DrawImage(phoneIcon, 200, 280, 20, 20);
-            e.Graphics.DrawString("+2347053112479, +23408063127611, +23407044842350", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(220, 280));
-            e.Graphics.DrawImage(instaIcon, 330, 300, 20, 20);
-            e.Graphics.DrawString("Switch_Phones_Gadgets", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(350, 300));
-            e.Graphics.DrawString("Date: " + sDate, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 350));
-            e.Graphics.DrawString("Invoice No: " + invoice_id.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(500, 350));
-            e.Graphics.DrawString("Customer Name: " + customerInput.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 450));
-            e.Graphics.DrawString("Customer Address: " + address.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 500));
-            e.Graphics.DrawString("Customer Phone: " + phone.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 550));
-            e.Graphics.DrawString("Product: " + product.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 600));
-            e.Graphics.DrawString("IMEI Number: " + imeiInput.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 650));
-            e.Graphics.DrawString("Colour: " + colorInput.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 700));
-            e.Graphics.DrawString("Memory: " + gbInput.Text + "Gb", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 750));
-            e.Graphics.DrawString("Amount: " + string.Format(new CultureInfo("yo-NG"), "{0:C}", amount), new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100,800));
-            e.Graphics.DrawString("Amount In Words: " + wordsInput.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 850));
-            e.Graphics.DrawString("Payment Mode: " + payment.Text, new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 900));
-            e.Graphics.DrawString("----------------------------", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 1000));
-            e.Graphics.DrawString("Customer Signature", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(100, 1020));
-            e.Graphics.DrawString("----------------------------", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(500, 1000));
-            e.Graphics.DrawString("CEO Sign and Stamp", new Font("Microsoft Sans Serif", 12, FontStyle.Bold), Brushes.Black, new Point(500, 1020));
+            e.Graphics.DrawImage(image, 60, 50, 200, 150);
+            e.Graphics.DrawImage(watermark, 40, 200, 200, 500);
+            e.Graphics.DrawString("2, OSHITELU STREET, COMPUTER VILLAGE,.", new Font("Microsoft Sans Serif", 8, FontStyle.Bold), Brushes.Black, new Point(20, 220));
+            e.Graphics.DrawString("IKEJA LAGOS.", new Font("Microsoft Sans Serif", 8, FontStyle.Bold), Brushes.Black, new Point(120, 230));
+            e.Graphics.DrawImage(phoneIcon, 20, 250, 20, 20);
+            e.Graphics.DrawString("07053112479,08063127611,07044842350", new Font("Microsoft Sans Serif", 8, FontStyle.Bold), Brushes.Black, new Point(40, 250));
+            e.Graphics.DrawImage(instaIcon, 80, 270, 20, 20);
+            e.Graphics.DrawString("Switch_Phones_Gadgets", new Font("Microsoft Sans Serif", 8, FontStyle.Bold), Brushes.Black, new Point(100, 270));
+            e.Graphics.DrawString("Date: " + sDate, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 320));
+            e.Graphics.DrawString("Invoice No: " + invoice_id.Text, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(150, 320));
+            e.Graphics.DrawString("Customer Name: " + customerInput.Text, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 350));
+            e.Graphics.DrawString("Customer Address: ", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 370));
+            e.Graphics.DrawString( address.Text, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 390));
+            e.Graphics.DrawString("Customer Phone: " + phone.Text, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 410));
+            e.Graphics.DrawString("Product: " + product.Text, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 430));
+            e.Graphics.DrawString("IMEI Number: " + imeiInput.Text, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 450));
+            e.Graphics.DrawString("Colour: " + colorInput.Text, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 470));
+            e.Graphics.DrawString("Memory: " + gbInput.Text + "Gb", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 490));
+            e.Graphics.DrawString("Amount: " + string.Format(new CultureInfo("yo-NG"), "{0:C}", amount), new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20,510));
+            e.Graphics.DrawString("Amount In Words: ", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 530));
+            e.Graphics.DrawString(wordsInput.Text, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 540));
+            e.Graphics.DrawString("Payment Mode: " + payment.Text, new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 560));
+            e.Graphics.DrawString("----------------------------", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 610));
+            e.Graphics.DrawString("Customer Signature", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(20, 620));
+            e.Graphics.DrawString("----------------------------", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(200, 610));
+            e.Graphics.DrawString("CEO Sign and Stamp", new Font("Microsoft Sans Serif", 8, FontStyle.Regular), Brushes.Black, new Point(200, 620));
 
         }
 
@@ -184,13 +197,39 @@ namespace @switch
             con.Open();
             com = new MySqlCommand("SELECT COUNT(*) FROM `sales`", con);
             int ID = Int32.Parse(com.ExecuteScalar().ToString());
-            string current = "SW-0000" + ID.ToString();
-            if(current != invoice_id.Text)
-            {
+            
+            string current = "";
+  //          if(current != invoice_id.Text)
+ //           {
                 ID++;
-                current = "SW-0000" + ID.ToString();
+                if(ID > 99999)
+                {
+                    current = "SW-" + ID.ToString();
+                }
+                else if(ID > 9999)
+                {
+                    current = "SW-0" + ID.ToString();
+
+                }
+                else if(ID > 999)
+                {
+                    current = "SW-00" + ID.ToString();
+                }
+                else if(ID > 99)
+                {
+                    current = "SW-000" + ID.ToString();
+
+                }
+                else if(ID > 9)
+                {
+                    current = "SW-0000" + ID.ToString();
+                }
                 invoice_id.Text = current;
-            }
+   //         }
+    //        else
+    //        {
+     //           MessageBox.Show(invoice_id.Text);
+    //        }
             con.Close();
         }
         private void create_pdf()
@@ -284,5 +323,26 @@ namespace @switch
         {
 
         }
+        private static string MD5Hash(string text)
+        {
+            MD5 md5 = new MD5CryptoServiceProvider();
+
+            //compute hash from the bytes of text  
+            md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(text));
+
+            //get hash result after compute it  
+            byte[] result = md5.Hash;
+
+            StringBuilder strBuilder = new StringBuilder();
+            for (int i = 0; i < result.Length; i++)
+            {
+                //change it into 2 hexadecimal digits  
+                //for each byte  
+                strBuilder.Append(result[i].ToString("x2"));
+            }
+
+            return strBuilder.ToString();
+        }
+
     }
 }
